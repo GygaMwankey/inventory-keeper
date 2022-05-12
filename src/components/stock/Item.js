@@ -13,7 +13,6 @@ import {
     deleteStockItem,
     updateStockItem
 } from ".//stockSlice";
-import stockItems from "../../stockItems";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 
@@ -36,7 +35,6 @@ const Item = (item) => {
         dispatch(updateAmount({amount,itemId}));
         dispatch(updateStockItem(stockItem));
         setItemAmount('');
-        // console.log(amount);
     };
 
     const handleRemoveStock = (e) => {
@@ -53,15 +51,12 @@ const Item = (item) => {
             dispatch(updateAmount({amount,itemId}));
             dispatch(updateStockItem(stockItem));
             setItemAmount('');
-
-            // console.log( (amount));
         }
         e.preventDefault();
         setItemAmount('');
     };
 
     const handleDeleteItem = () => {
-        // e.preventDefault();
         const itemId = item.id;
         dispatch(removeFromStock(itemId));
         dispatch(deleteStockItem(itemId));

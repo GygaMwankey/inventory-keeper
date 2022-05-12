@@ -1,11 +1,58 @@
 import './App.css';
 
-import React, { Fragment } from "react";
+import React, {Fragment, useEffect} from 'react';
+import ItemList from "./components/stock/ItemList";
+import Header from "./components/layout/Header";
 
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Box from "@mui/material/Box";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import {useDispatch, useSelector} from "react-redux";
+import { loadUser } from "./features/auth/authSlice";
+import PrivateRoute from "./components/layout/PrivateRoute";
 
 function App() {
+
+  const auth = useSelector(state => state.auth);
+  const  dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = auth.token;
+
+    dispatch(loadUser(token))
+  }, []);
+
   return (
-      <div>React App</div>
+      <Router>
+        <Fragment>
+          <Header auth={auth} />
+          <Box sx={{marginTop:10}}>
+            <Routes>
+              <Route
+                  path="/"
+                  element={
+                    <PrivateRoute auth={auth}>
+                      <ItemList />
+                    </PrivateRoute>
+                  }
+              />
+              <Route
+                  path="/login"
+                  element={
+                    <Login />
+                  }
+              />
+              <Route
+                  path="/register"
+                  element={
+                    <Register />
+                  }
+              />
+            </Routes>
+          </Box>
+        </Fragment>
+      </Router>
   );
 }
 

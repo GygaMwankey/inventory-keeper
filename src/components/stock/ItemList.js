@@ -3,16 +3,11 @@ import Item from "./Item";
 import {useSelector, useDispatch} from "react-redux";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AddOutlined from "@mui/icons-material/AddOutlined";
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined";
 import CardHeader from "@mui/material/CardHeader";
-import TextField from "@mui/material/TextField/TextField";
-import Button from "@mui/material/Button";
 import { getStockItems } from ".//stockSlice";
-import CardActions from "@mui/material/CardActions";
 import AddItem from "./AddItem";
 
 
