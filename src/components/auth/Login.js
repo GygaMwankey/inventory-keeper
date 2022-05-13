@@ -3,9 +3,9 @@ import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser} from "../../features/auth/authSlice";
 import {Navigate} from "react-router";
+import TextField from "@mui/material/TextField";
 
 const Login = () => {
-
     const auth = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
@@ -13,7 +13,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
 
-    const handleLogin = (e) => {
+    const handleLogin = () => {
 
         const body = JSON.stringify(
             {
@@ -34,20 +34,22 @@ const Login = () => {
                         </h2>
                         <form onSubmit={handleLogin}>
                             <div className="form-group">
-                                <label htmlFor="username">Username: </label>
-                                <input
+                                <TextField
                                     type="text"
                                     name="username"
+                                    label="Username"
+                                    placeholder="Enter your Username"
                                     className="form-control"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="password">Password: </label>
-                                <input
+                                <TextField
                                     type="password"
                                     name="password"
+                                    label="Password"
+                                    placeholder="Enter your Passwod"
                                     className="form-control"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}

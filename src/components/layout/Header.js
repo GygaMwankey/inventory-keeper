@@ -6,16 +6,18 @@ import Toolbar from '@mui/material/Toolbar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {logoutUser} from "../../features/auth/authSlice";
 
 
-const Header = ({auth}) => {
+const Header = () => {
 
+    const auth = useSelector(state => state.auth);
+    console.log(auth);
     const  dispatch = useDispatch();
 
-    const  handleLogout = () => {
-        const token = auth.token;
+    const  handleLogout = (token) => {
+        token = auth.token;
         dispatch(logoutUser(token));
     };
 
@@ -31,7 +33,8 @@ const Header = ({auth}) => {
 
                     <div className="navbar-nav ml-auto">
                         {auth.isAuthenticated ?
-                            <ul className="nav nav-item">
+                            <ul className="nav nav-item" style={{ alignItems: "center"}}>
+                                <li className="nav-item mr-4" style={{fontSize: 13}}>Welcome {auth.user.username} {auth.user.is_staff ?'( Manager )': '( Staff )'}</li>
                                 <li className="nav-item mr-3">
                                     <button className="btn btn-sm btn-outline-light" onClick={handleLogout}> Logout </button>
                                 </li>

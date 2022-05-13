@@ -4,7 +4,7 @@ import React, {Fragment, useEffect} from 'react';
 import ItemList from "./components/stock/ItemList";
 import Header from "./components/layout/Header";
 
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import { HashRouter as Router, Route, Routes} from "react-router-dom";
 import Box from "@mui/material/Box";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
@@ -21,12 +21,12 @@ function App() {
     const token = auth.token;
 
     dispatch(loadUser(token))
-  }, []);
+  }, [dispatch, auth.token]);
 
   return (
       <Router>
         <Fragment>
-          <Header auth={auth} />
+          <Header />
           <Box sx={{marginTop:10}}>
             <Routes>
               <Route

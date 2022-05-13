@@ -5,7 +5,7 @@ import CardActions from "@mui/material/CardActions/CardActions";
 import TextField from "@mui/material/TextField/TextField";
 import Button from "@mui/material/Button";
 import {useDispatch} from "react-redux";
-import {addStockItem} from ".//stockSlice";
+import {addStockItem} from "../../features/stock/stockSlice";
 
 const AddItem = () => {
 

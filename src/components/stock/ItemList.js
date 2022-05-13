@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import AddOutlined from "@mui/icons-material/AddOutlined";
 import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined";
 import CardHeader from "@mui/material/CardHeader";
-import { getStockItems } from ".//stockSlice";
+import { getStockItems } from "./../../features/stock/stockSlice";
 import AddItem from "./AddItem";
 
 
@@ -15,12 +15,13 @@ import AddItem from "./AddItem";
 const ItemList = () => {
 
     const { stockItems, isLoading } = useSelector((state) => state.stock);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
 
 
     useEffect(() => {
         dispatch(getStockItems());
-    },[]);
+    },[dispatch]);
 
     const [open, setOpen] = useState(false);
 
@@ -40,18 +41,20 @@ const ItemList = () => {
             <div className="container">
                 <h2>Your stock is empty</h2>
                 <Card sx={{ marginTop: 0 }} elevation={7}>
-                    <CardHeader
+                        <CardHeader
                         sx={{ marginBottom : -1, marginTop: -1 }}
                         title={`Items in your store : ${stockItems.length}`}
-                        action={
+                        action={ user.is_staff ?
                             <IconButton
                                 arial-label="close"
                                 onClick={handleOpen}
                             >
                                 {!open ? <AddOutlined sx={{color: "blue"}} /> : <KeyboardArrowUpOutlined />}
                             </IconButton>
+                            :
+                            ""
                         }
-                    />
+                        />
                 </Card>
                 { open ?
                     <AddItem />
@@ -74,18 +77,20 @@ const ItemList = () => {
             </Grid>
             <hr/>
             <Card sx={{ marginTop: -2 }} elevation={7}>
-                <CardHeader
-                    sx={{ marginBottom : -1, marginTop: -1 }}
-                    title={`Items in your store : ${stockItems.length}`}
-                    action={
-                        <IconButton
-                            arial-label="close"
-                            onClick={handleOpen}
-                        >
-                            {!open ? <AddOutlined sx={{color: "blue"}} /> : <KeyboardArrowUpOutlined />}
-                        </IconButton>
-                    }
-                />
+                    <CardHeader
+                        sx={{ marginBottom : -1, marginTop: -1 }}
+                        title={`Items in your store : ${stockItems.length}`}
+                        action={ user.is_staff ?
+                            <IconButton
+                                arial-label="close"
+                                onClick={handleOpen}
+                            >
+                                {!open ? <AddOutlined sx={{color: "blue"}} /> : <KeyboardArrowUpOutlined />}
+                            </IconButton>
+                            :
+                            ''
+                        }
+                    />
             </Card>
             { open ?
                 <AddItem />

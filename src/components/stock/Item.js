@@ -6,17 +6,19 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     updateAmount,
     removeFromStock,
     deleteStockItem,
     updateStockItem
-} from ".//stockSlice";
+} from "./../../features/stock/stockSlice";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 
 const Item = (item) => {
+
+    const user = useSelector(state => state.auth.user)
 
     const dispatch = useDispatch();
 
@@ -68,13 +70,14 @@ const Item = (item) => {
                 title={item.name}
                 subheader={"Available stock " + item.amount}
                 sx={{marginBottom: -3}}
-                action={
-                    <IconButton
-                        arial-label="close"
-                        onClick={handleDeleteItem}
-                    >
-                        <Close sx={{color: "red"}} />
-                    </IconButton>
+                action={user.is_staff ?
+                        <IconButton
+                            arial-label="close"
+                            onClick={handleDeleteItem}
+                        >
+                            <Close sx={{color: "red"}} />
+                        </IconButton>
+                    : ''
                 }
             />
             <CardContent>
