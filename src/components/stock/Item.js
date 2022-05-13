@@ -16,33 +16,26 @@ import {
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 
+import {toast} from "react-toastify";
+
 const Item = (item) => {
 
     const user = useSelector(state => state.auth.user)
-
     const dispatch = useDispatch();
 
     const [itemAmount,setItemAmount] = useState("");
 
     const handleAddStock = (e) => {
         e.preventDefault();
-        const amount = Number(item.amount) + Math.abs(Number(itemAmount));
-        const itemId = item.id;
-        const stockItem ={
-            id : item.id,
-            name : item.name,
-            description : item.description,
-            amount
-        };
-        dispatch(updateAmount({amount,itemId}));
-        dispatch(updateStockItem(stockItem));
-        setItemAmount('');
-    };
 
-    const handleRemoveStock = (e) => {
-        if (Number(item.amount) >= Math.abs(Number(itemAmount))){
-            e.preventDefault();
-            const amount = Number(item.amount) - Math.abs(Number(itemAmount));
+        console.log(Math.ceil((Math.abs(Number(itemAmount)))))
+
+        if ( Math.ceil(Math.abs(Number(itemAmount))) < 1){
+            toast('Amount can not be empty or zero')
+
+        }
+        else{
+            const amount = Number(item.amount) + Math.ceil(Math.abs(Number(itemAmount)));
             const itemId = item.id;
             const stockItem ={
                 id : item.id,
@@ -51,6 +44,27 @@ const Item = (item) => {
                 amount
             };
             dispatch(updateAmount({amount,itemId}));
+            toast.success(`Added ${Math.ceil(Math.abs(Number(itemAmount)))} ${item.name}`);
+            dispatch(updateStockItem(stockItem));
+            setItemAmount('');
+        }
+
+    };
+
+    const handleRemoveStock = (e) => {
+        if (Number(item.amount) >= Math.ceil(Math.abs(Number(itemAmount))))
+        {
+            e.preventDefault();
+            const amount = Number(item.amount) - Math.ceil(Math.abs(Number(itemAmount)));
+            const itemId = item.id;
+            const stockItem ={
+                id : item.id,
+                name : item.name,
+                description : item.description,
+                amount
+            };
+            dispatch(updateAmount({amount,itemId}));
+            toast.success(`Removed ${Math.ceil(Math.abs(Number(itemAmount)))} ${item.name}`);
             dispatch(updateStockItem(stockItem));
             setItemAmount('');
         }
@@ -61,7 +75,9 @@ const Item = (item) => {
     const handleDeleteItem = () => {
         const itemId = item.id;
         dispatch(removeFromStock(itemId));
+        toast.success(`${item.name} deleted from stock`)
         dispatch(deleteStockItem(itemId));
+
     };
 
     return (

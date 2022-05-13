@@ -6,7 +6,10 @@ const url = "http://127.0.0.1:8000/api/items/";
 
 const initialState = {
     stockItems: [],
-    isLoading: true,
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+    message: '',
 };
 
 export const getStockItems = createAsyncThunk(
@@ -18,7 +21,10 @@ export const getStockItems = createAsyncThunk(
             return res.data
 
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            console.log(err.data);
+            const errStatus = err.request;
+            return thunkAPI.rejectWithValue(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.name || err.data.amount} `)
         }
     });
 
@@ -32,7 +38,10 @@ export const addStockItem = createAsyncThunk(
             )
 
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            console.log(err.data);
+            const errStatus = err.request;
+            return thunkAPI.rejectWithValue(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.name || err.data.amount} `)
         }
     });
 
@@ -44,7 +53,10 @@ export const deleteStockItem = createAsyncThunk(
             return res.data
 
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            console.log(err.data);
+            const errStatus = err.request;
+            return thunkAPI.rejectWithValue(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.name || err.data.amount} `)
         }
     });
 
@@ -56,7 +68,9 @@ export const updateStockItem = createAsyncThunk(
             return res.data
 
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            const errStatus = err.request;
+            return thunkAPI.rejectWithValue(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.name || err.data.amount} `)
         }
     });
 
@@ -86,7 +100,6 @@ const stockSlice = createSlice({
             ));
             state.amount = state.stockItems.length;
 
-            console.log(itemId)
         },
     },
     extraReducers: {
@@ -98,8 +111,9 @@ const stockSlice = createSlice({
             state.isLoading = false;
             state.stockItems = action.payload;
         },
-        [getStockItems.rejected] : (state) => {
-            state.isLoading = false
+        [getStockItems.rejected] : (state, action) => {
+            state.isLoading = false;
+            state.message = action.payload
         },
 
         // add stock items
@@ -113,8 +127,10 @@ const stockSlice = createSlice({
                 action.payload
             ]
         },
-        [addStockItem.rejected] : (state) => {
+        [addStockItem.rejected] : (state,action) => {
             state.isLoading = false
+            state.isError = true
+            state.message = action.payload
         },
         // update stock items
         [updateStockItem.pending] : (state) => {
@@ -129,8 +145,10 @@ const stockSlice = createSlice({
                 ))
             ]
         },
-        [updateStockItem.rejected] : (state) => {
+        [updateStockItem.rejected] : (state, action) => {
             state.isLoading = false
+            state.isError = true
+            state.message = action.payload
         },
     }
 });

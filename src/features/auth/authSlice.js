@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import authServices from "./authServices";
+import {toast} from "react-toastify";
 
 const token = localStorage.getItem('token')
 
@@ -10,6 +11,7 @@ const initialState = {
     isSuccess: false,
     isError: false,
     user: null,
+    message: '',
 };
 
 export const loadUser = createAsyncThunk(
@@ -18,7 +20,10 @@ export const loadUser = createAsyncThunk(
         try {
             return  await  authServices.loadUser(token)
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            // console.log(err);
+            const errStatus = err.request;
+            return thunkAPI.rejectWithValue(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.detail} `)
         }
     });
 
@@ -28,7 +33,12 @@ export const registerUser = createAsyncThunk(
         try {
             return  await authServices.register(body);
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            console.log(err);
+            const errStatus = err.request;
+            return thunkAPI.dispatch(toast.error(
+                `Error Status : ${errStatus.status} ${errStatus.statusText}, 
+                Error : ${err.data.non_field_errors || err.data.email || err.data.username || err.data.password}`))
         }
     });
 
@@ -38,7 +48,9 @@ export const loginUser = createAsyncThunk(
         try {
             return  await authServices.login(body);
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            const errStatus = err.request;
+            return thunkAPI.dispatch(toast.error(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.non_field_errors} `))
         }
     });
 
@@ -47,8 +59,12 @@ export const logoutUser = createAsyncThunk(
     async (token, thunkAPI) => {
         try {
             return await authServices.logout(token)
+
         }catch (e) {
-            return thunkAPI.rejectWithValue('There was an error')
+            const err = e.response;
+            // console.log(err);
+            const errStatus = err.request;
+            return thunkAPI.rejectWithValue(`Error Status : ${errStatus.status} ${errStatus.statusText}, Error : ${err.data.detail} `)
         }
     });
 
@@ -76,15 +92,14 @@ export const logoutUser = createAsyncThunk(
                  state.isAuthenticated = true;
                  state.user = action.payload;
              })
-             .addCase((loadUser.rejected, registerUser.rejected, logoutUser.fulfilled), (state) => {
+             .addCase(loadUser.rejected, (state) => {
                  localStorage.removeItem("token");
                  state.token = null;
                  state.user = null;
                  state.isLoading = false;
                  state.isSuccess = false;
-                 state.isError = false;
+                 state.isError = true;
                  state.isAuthenticated = null;
-
              })
 
              // Login User actions
@@ -98,14 +113,15 @@ export const logoutUser = createAsyncThunk(
                  state.token = action.payload.token
                  state.user = action.payload.user
              })
-             .addCase(loginUser.rejected, (state) => {
+             .addCase(loginUser.rejected, (state,action) => {
                  localStorage.removeItem("token");
                  state.token = null;
                  state.user = null;
                  state.isLoading = false;
                  state.isSuccess = false;
-                 state.isError = false;
+                 state.isError = true;
                  state.isAuthenticated = null;
+                 state.message = action.payload
 
              })
 
@@ -126,10 +142,23 @@ export const logoutUser = createAsyncThunk(
                  state.user = null;
                  state.isLoading = false;
                  state.isSuccess = false;
-                 state.isError = false;
+                 state.isError = true;
                  state.isAuthenticated = null;
 
              })
+
+             // LogOut User Actions
+             .addCase(logoutUser.fulfilled, (state) => {
+                 localStorage.removeItem("token");
+                 state.token = null;
+                 state.user = null;
+                 state.isLoading = false;
+                 state.isSuccess = false;
+                 state.isError = false;
+                 state.isAuthenticated = null;
+             })
+
+
      },
 
  });

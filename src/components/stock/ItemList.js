@@ -10,18 +10,25 @@ import CardHeader from "@mui/material/CardHeader";
 import { getStockItems } from "./../../features/stock/stockSlice";
 import AddItem from "./AddItem";
 
+import {toast} from "react-toastify";
+
 
 
 const ItemList = () => {
 
-    const { stockItems, isLoading } = useSelector((state) => state.stock);
+    const { stockItems, isLoading, isError, message } = useSelector((state) => state.stock);
     const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
 
 
     useEffect(() => {
+        if (isError){
+            toast.error(message)
+        }
+
         dispatch(getStockItems());
-    },[dispatch]);
+    },[dispatch, isError, message]);
+
 
     const [open, setOpen] = useState(false);
 

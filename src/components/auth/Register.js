@@ -3,6 +3,7 @@ import {Link, Navigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import {useDispatch, useSelector} from "react-redux";
 import {registerUser} from "../../features/auth/authSlice";
+import {toast} from "react-toastify";
 
 
 const Register = () => {
@@ -19,7 +20,10 @@ const Register = () => {
     const handleRegister = (e) => {
         e.preventDefault();
 
-        if (password1===password2){
+        if (password1!==password2){
+            toast.error("Password do not match")
+        }
+        else{
             const body = JSON.stringify(
                 {
                     username: username,
@@ -28,7 +32,6 @@ const Register = () => {
                 });
             dispatch(registerUser(body));
         }
-
     };
 
     if(!auth.isAuthenticated)

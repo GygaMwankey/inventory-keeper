@@ -54,15 +54,14 @@ const login = async  (userData) => {
 const logout = async (token) => {
     const config = {
         headers: {
-            'Content-Type':'application/json'
+            "Content-Type" : "application/json"
         }
     };
     if(token){
         config.headers['Authorization'] = `Token ${token}`
     }
+    await axios.post(LOGOUT_URL, '', config);
 
-    const res = await axios.post(LOGOUT_URL, null, config);
-    return res
 }
 
 const  authServices = {

@@ -12,47 +12,56 @@ import {useDispatch, useSelector} from "react-redux";
 import { loadUser } from "./features/auth/authSlice";
 import PrivateRoute from "./components/layout/PrivateRoute";
 
+import {ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
+
+
+
 function App() {
 
   const auth = useSelector(state => state.auth);
-  const  dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const token = auth.token;
+      const token = auth.token;
 
-    dispatch(loadUser(token))
-  }, [dispatch, auth.token]);
+      dispatch(loadUser(token));
+      }, [dispatch, auth.token]);
+
 
   return (
-      <Router>
-        <Fragment>
-          <Header />
-          <Box sx={{marginTop:10}}>
-            <Routes>
-              <Route
-                  path="/"
-                  element={
-                    <PrivateRoute auth={auth}>
-                      <ItemList />
-                    </PrivateRoute>
-                  }
-              />
-              <Route
-                  path="/login"
-                  element={
-                    <Login />
-                  }
-              />
-              <Route
-                  path="/register"
-                  element={
-                    <Register />
-                  }
-              />
-            </Routes>
-          </Box>
-        </Fragment>
-      </Router>
+      <>
+          <Router>
+            <Fragment>
+              <Header />
+              <Box sx={{marginTop:10}}>
+                <Routes>
+                  <Route
+                      path="/"
+                      element={
+                        <PrivateRoute auth={auth}>
+                          <ItemList />
+                        </PrivateRoute>
+                      }
+                  />
+                  <Route
+                      path="/login"
+                      element={
+                        <Login />
+                      }
+                  />
+                  <Route
+                      path="/register"
+                      element={
+                        <Register />
+                      }
+                  />
+                </Routes>
+              </Box>
+            </Fragment>
+          </Router>
+        <ToastContainer />
+      </>
   );
 }
 

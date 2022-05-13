@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField/TextField";
 import Button from "@mui/material/Button";
 import {useDispatch} from "react-redux";
 import {addStockItem} from "../../features/stock/stockSlice";
+import {toast} from "react-toastify";
 
 const AddItem = () => {
 
@@ -17,13 +18,21 @@ const AddItem = () => {
 
 
     const handleAddStockItem = (e) => {
-        e.preventDefault();
-        const stockItem ={name, description, amount};
-        dispatch(addStockItem(stockItem));
-        setName('');
-        setDescription('');
-        setAmount('');
-        console.log(stockItem)
+        e.preventDefault()
+        if (amount < 0 ) {
+            toast("Amount should be 0 or above")
+        }
+        else{
+            const stockItem ={
+                name,
+                description,
+                amount : Math.ceil(Number(amount))
+            };
+            dispatch(addStockItem(stockItem));
+            setName('');
+            setDescription('');
+            setAmount('');
+        }
     };
 
 

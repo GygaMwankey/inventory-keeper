@@ -5,20 +5,24 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
+
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {logoutUser} from "../../features/auth/authSlice";
+import { logoutUser } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 
 const Header = () => {
 
+
     const auth = useSelector(state => state.auth);
-    console.log(auth);
     const  dispatch = useDispatch();
+
 
     const  handleLogout = (token) => {
         token = auth.token;
         dispatch(logoutUser(token));
+        toast.success("Successful Logout")
     };
 
     return (

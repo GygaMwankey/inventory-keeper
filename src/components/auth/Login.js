@@ -13,7 +13,9 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
 
-    const handleLogin = () => {
+    const handleLogin = (e) => {
+        e.preventDefault();
+
 
         const body = JSON.stringify(
             {
@@ -42,6 +44,7 @@ const Login = () => {
                                     className="form-control"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
+                                    required={true}
                                 />
                             </div>
                             <div className="form-group">
@@ -53,6 +56,7 @@ const Login = () => {
                                     className="form-control"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    required={true}
                                 />
                             </div>
                             <div className="form-group">
